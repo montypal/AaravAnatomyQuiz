@@ -3,178 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anatomy MEGA Quiz: 50+ Slides</title>
+    <title>The Ultimate Anatomy & Physiology Quiz</title>
     <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #f43f5e;
-            --bg: #0f172a;
-            --card: rgba(30, 41, 59, 0.9);
-            --text: #f8fafc;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at center, #1e1b4b, #0f172a);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        #sidebar {
-            width: 280px;
-            background: rgba(15, 23, 42, 0.95);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .student-pill {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .student-pill.absent { opacity: 0.3; text-decoration: line-through; }
-        .student-pill.active-turn { border: 2px solid var(--primary); background: rgba(99, 102, 241, 0.2); }
-
-        #main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            position: relative;
-        }
-
-        .slide {
-            display: none;
-            width: 100%;
-            max-width: 850px;
-            background: var(--card);
-            padding: 40px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            animation: fadeIn 0.4s ease-out;
-        }
-
+        :root { --primary: #6366f1; --secondary: #f43f5e; --accent: #10b981; --bg: #0f172a; --card: rgba(30, 41, 59, 0.95); --text: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        #sidebar { width: 260px; background: #0b0f1a; border-right: 1px solid #334155; padding: 20px; display: flex; flex-direction: column; }
+        .student-item { padding: 10px; margin: 5px 0; background: #1e293b; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; border: 2px solid transparent; }
+        .student-item.absent { opacity: 0.3; text-decoration: line-through; }
+        .student-item.active-turn { border-color: var(--primary); background: #312e81; }
+        #main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; overflow-y: auto; }
+        .slide { display: none; width: 100%; max-width: 800px; background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .slide.active { display: block; }
-
-        .tag { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 10px; display: block; }
-        .tag.lesson { color: var(--primary); }
-        .tag.quiz { color: var(--secondary); }
-
-        .turn-box {
-            background: var(--secondary);
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
+        .tag { font-weight: bold; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; padding: 4px 8px; border-radius: 4px; margin-bottom: 15px; display: inline-block; }
+        .tag-lesson { background: var(--primary); }
+        .tag-quiz { background: var(--secondary); }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .option {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.2s;
-        }
-        .option:hover { background: rgba(255,255,255,0.1); }
-        .correct { background: #10b981 !important; }
-        .wrong { background: #ef4444 !important; }
-
-        .btn {
-            background: var(--primary);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .option { background: #334155; padding: 15px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .option:hover { background: #475569; }
+        .correct { background: var(--accent) !important; }
+        .wrong { background: var(--secondary) !important; }
+        .btn { background: var(--primary); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .turn-alert { background: var(--secondary); padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2 style="margin:0 0 10px 0">Class Tracker</h2>
-    <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px;">Click name to mark Absent/Present</p>
+    <h3 style="margin-top:0">Class Tally</h3>
     <div id="roster"></div>
-    <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-        <div id="progress">Slide 1 / 50</div>
-    </div>
+    <div id="progress" style="margin-top:auto; font-size:0.8rem; color:#94a3b8">Slide 1/54</div>
 </div>
 
 <div id="main">
-    <div id="container"></div>
+    <div id="slide-container"></div>
 </div>
 
 <script>
-    const studentData = ["Aarav", "KangIn", "Alyssa", "Emogen", "Anhad", "Daani", "Maggie"];
-    let students = studentData.map(s => ({ name: s, score: 0, present: true }));
-    let currentSlideIndex = 0;
-    let turnStudent = "";
+    const studentNames = ["Aarav", "KangIn", "Alyssa", "Emogen", "Anhad", "Daani", "Maggie"];
+    let students = studentNames.map(name => ({ name, score: 0, present: true }));
+    let currentSlide = 0;
+    let turnName = "";
 
-    const slides = [
-        // SLEEP & AROUSAL
-        { type: "lesson", title: "Sleep Architecture", body: "Sleep cycles through NREM stages and REM. <b>NREM Stage 2</b> is characterized by <b>Sleep Spindles</b> (bursts of activity) and <b>K-complexes</b> (large waves). REM is where dreams occur and muscles are paralyzed." },
-        { type: "quiz", q: "Which EEG landmark is a defining feature of NREM Stage 2 sleep?", opt: ["Delta Waves", "Sleep Spindles", "Alpha Waves", "Sawtooth Waves"], a: 1 },
-        { type: "lesson", title: "Reticular Activating System", body: "The <b>RAS</b> is a network in the brainstem that acts as the brain's 'alarm clock.' It maintains consciousness and alertness by filtering sensory information before it reaches the cortex." },
-        { type: "quiz", q: "A patient in a permanent coma likely has damage to which functional system?", opt: ["Basal Nuclei", "Cerebellum", "Reticular Activating System", "Corpus Callosum"], a: 2 },
+    const data = [
+        // 1-2: NREM 1-3 & REM
+        { type: "lesson", title: "Sleep Stages", body: "Sleep is divided into NREM (Stages 1-3) and REM. NREM 3 is 'Slow Wave Sleep' (Delta waves). REM involves rapid eye movements, dreaming, and <b>muscle atonia</b> (paralysis)." },
+        { type: "quiz", q: "In which sleep stage is the body virtually paralyzed to prevent acting out dreams?", opt: ["NREM 1", "NREM 2", "NREM 3", "REM"], a: 3 },
         
-        // BRAINSTEM UNITS
-        { type: "lesson", title: "Superior vs Inferior Colliculi", body: "Located in the midbrain: <b>Superior Colliculi</b> coordinate visual reflexes (tracking movement). <b>Inferior Colliculi</b> coordinate auditory reflexes (startle response to sound)." },
-        { type: "quiz", q: "Which structure allows you to reflexively turn your head toward a loud explosion?", opt: ["Superior Colliculus", "Inferior Colliculus", "Medulla", "Pons"], a: 1 },
-        { type: "lesson", title: "Basal Nuclei Anatomy", body: "The Basal Nuclei include the <b>Caudate</b>, <b>Putamen</b>, and <b>Globus Pallidus</b>. They work together to plan and smooth out voluntary movements." },
-        { type: "quiz", q: "Which of the following is NOT considered part of the Basal Nuclei?", opt: ["Caudate", "Putamen", "Globus Pallidus", "Thalamus"], a: 3 },
+        // 3-4: Spindles/K-Complexes
+        { type: "lesson", title: "Sleep Markers", body: "<b>Sleep Spindles</b> (bursts of high frequency) and <b>K-complexes</b> (large single waves) are the hallmark EEG features of <b>NREM Stage 2</b>." },
+        { type: "quiz", q: "You see a Sleep Spindle on an EEG. Which stage is the patient in?", opt: ["NREM 1", "NREM 2", "NREM 3", "REM"], a: 1 },
 
-        // NEUROCHEMISTRY
-        { type: "lesson", title: "Dopamine Pathways", body: "<b>Nigrostriatal:</b> Motor control (Parkinson's link). <b>Mesolimbic:</b> Reward and addiction. This pathway connects the midbrain to the nucleus accumbens." },
-        { type: "quiz", q: "The 'Reward Pathway' associated with dopamine and addiction is the:", opt: ["Nigrostriatal", "Mesolimbic", "Spinothalamic", "Corticospinal"], a: 1 },
-        { type: "lesson", title: "Synaptic Steps", body: "1. Action Potential arrives. 2. <b>Calcium (Ca2+)</b> enters the terminal. 3. Vesicles fuse. 4. Neurotransmitters diffuse across the <b>synaptic cleft</b>." },
-        { type: "quiz", q: "What specific ion influx triggers the fusion of neurotransmitter vesicles with the membrane?", opt: ["Na+", "K+", "Ca2+", "Cl-"], a: 2 },
-        { type: "lesson", title: "Temporal vs Spatial Summation", body: "<b>Temporal:</b> One neuron firing rapidly. <b>Spatial:</b> Multiple different neurons firing at once to reach threshold." },
-        { type: "quiz", q: "If three separate presynaptic neurons fire at the same time to excite a single postsynaptic neuron, this is:", opt: ["Temporal Summation", "Spatial Summation", "Refractory Period", "Saltatory Conduction"], a: 1 },
-        { type: "lesson", title: "Electrical Synapses", body: "These use <b>Gap Junctions</b> for direct ion flow between neurons. They are faster than chemical synapses and allow for highly synchronized activity." },
-        { type: "quiz", q: "Electrical synapses are characterized by which physical connection?", opt: ["Synaptic Cleft", "Gap Junctions", "Reuptake Pumps", "Voltage Gated Channels"], a: 1 },
+        // 5-6: RAS
+        { type: "lesson", title: "Reticular Activating System", body: "The <b>RAS</b> is a network in the brainstem that regulates sleep-wake transitions and conscious attention. It 'wakes up' the cortex." },
+        { type: "quiz", q: "Severe damage to the Reticular Activating System (RAS) usually results in:", opt: ["Blindness", "Permanent Coma", "Inability to swallow", "Hyperactivity"], a: 1 },
 
-        // PROTECTION/REFLEX
-        { type: "lesson", title: "Blood-Brain Barrier", body: "A highly selective barrier made of tight junctions and supported by <b>Astrocytes</b>. It protects the brain from circulating toxins and pathogens." },
-        { type: "quiz", q: "Which glial cell is primarily responsible for maintaining the Blood-Brain Barrier?", opt: ["Microglia", "Ependymal Cells", "Astrocytes", "Oligodendrocytes"], a: 2 },
-        { type: "lesson", title: "Reflex Arc Logic", body: "The flow is always: <b>Receptor → Sensory Neuron → Integration Center (Spinal Cord) → Motor Neuron → Effector</b>." },
-        { type: "quiz", q: "In a reflex arc, which component typically resides entirely within the CNS?", opt: ["Receptor", "Effector", "Integration Center", "Sensory Neuron"], a: 2 },
-        { type: "lesson", title: "Stroke Recognition", body: "Use <b>FAST</b>: Face drooping, Arm weakness, Speech difficulty, Time to call 911. Ischemic (clot) vs Hemorrhagic (bleed)." },
-        { type: "quiz", q: "What does the 'A' stand for in the FAST stroke recognition acronym?", opt: ["Aphasia", "Amnesia", "Arm weakness", "Artery blockage"], a: 2 },
-        { type: "lesson", title: "Seizure Classes", body: "<b>Absence (Petit Mal):</b> Brief staring spells. <b>Tonic-Clonic (Grand Mal):</b> Loss of consciousness and violent muscle contractions." },
-        { type: "quiz", q: "Which type of seizure involves a sudden 'staring into space' without motor convulsions?", opt: ["Tonic-Clonic", "Absence", "Ischemic", "Myoclonic"], a: 1 },
+        // 7-8: Colliculi
+        { type: "lesson", title: "Superior & Inferior Colliculi", body: "The <b>Superior Colliculi</b> handle visual reflexes (tracking movement). The <b>Inferior Colliculi</b> handle auditory reflexes (turning toward sound)." },
+        { type: "quiz", q: "Which midbrain structure helps you reflexively track a flying baseball with your eyes?", opt: ["Superior Colliculus", "Inferior Colliculus", "Pons", "Medulla"], a: 0 },
 
-        // VISION
-        { type: "lesson", title: "Retinal Signaling Order", body: "Even though light hits the back first, the signal flows: <b>Photoreceptor → Bipolar Cell → Ganglion Cell</b>. Ganglion axons form the optic nerve." },
-        { type: "quiz", q: "Which cells in the retina are the FIRST to generate an electrical signal in response to light?", opt: ["Ganglion Cells", "Bipolar Cells", "Photoreceptors", "Amacrine Cells"], a: 2 },
-        { type: "lesson", title: "The Fovea", body: "The <b>Fovea Centralis</b> is a tiny pit containing only <b>Cones</b>. It provides our highest visual acuity (sharpness)." },
-        { type: "quiz", q: "The Fovea is unique because it contains almost exclusively which type of receptor?", opt: ["Rods", "Cones", "Nociceptors", "Baroreceptors"], a: 1 },
-        { type: "lesson", title: "Aqueous vs Vitreous", body: "<b>Aqueous:</b> Watery, front of lens, constantly drained. <b>Vitreous:</b> Gel-like, behind lens, maintains eye shape permanently." },
-        { type: "quiz", q: "Which fluid in the eye is gel-like and NOT continuously replaced?", opt: ["Aqueous Humor", "Vitreous Humor", "Endolymph", "Perilymph"], a: 1 },
-        { type: "lesson", title: "Accommodation", body: "This is the ability to focus on near objects. The <b>Ciliary Muscles</b> contract, causing the lens to become more round/thick." },
-        { type: "quiz", q: "During near-vision accommodation, the ciliary muscles contract to make the lens:", opt: ["Flatter", "Thinner", "Rounder/Thicker", "Opaque"], a: 2 },
+        // 9-10: Basal Nuclei
+        { type: "lesson", title: "Basal Nuclei", body: "Consists of the <b>Caudate, Putamen, and Globus Pallidus</b>. They regulate the initiation and termination of movements." },
+        { type: "quiz", q: "Which of these is NOT one of the three primary basal nuclei?", opt: ["Caudate", "Putamen", "Amygdala", "Globus Pallidus"], a: 2 },
 
-        // SOUND (Detailed)
-        { type: "lesson", title: "Sound Path: External to Middle", body: "Sound is funneled by the <b>Pinna</b> → Auditory Canal → <b>Tympanic Membrane</b> (vibrates) → <b>Ossicles</b> (Malleus, Incus, Stapes)." },
-        { type: "quiz", q: "What is the correct order of the middle ear ossicles from outer to inner?", opt: ["St
+        // 11-12: Dopamine Pathways
+        { type: "lesson", title: "Dopamine Pathways", body: "<b>Nigrostriatal:</b> Motor control (Substantia Nigra to Basal Nuclei). <b>Mesolimbic:</b> Reward/Addiction (VTA to Nucleus Accumbens)." },
+        { type: "quiz", q: "The 'Reward Pathway' often linked to addiction is the:", opt: ["Nigrostriatal", "Mesolimbic", "Corticospinal", "Spinothalamic"], a: 1 },
+
+        // 13-14: Synaptic Transmission
+        { type: "lesson", title: "Synaptic Transmission", body: "1. AP arrives. 2. <b>Voltage-gated Ca2+ channels</b> open. 3. Ca2+ influx causes vesicle fusion. 4. Neurotransmitter diffuses across the cleft." },
+        { type: "quiz", q: "What ion MUST enter the synaptic terminal to trigger neurotransmitter release?", opt: ["Sodium", "Potassium", "Calcium", "Chloride"], a: 2 },
+
+        // 15-16: EPSP/IPSP
+        { type: "lesson", title: "EPSP vs IPSP", body: "<b>EPSP:</b> Local depolarization (usually Na+ in). <b>IPSP:</b> Local hyperpolarization (usually Cl- in or K+ out)." },
+        { type: "quiz", q: "An IPSP (Inhibitory Postsynaptic Potential) makes the neuron:", opt: ["More likely to fire", "Less likely to fire", "Reach threshold", "Stay at -55mV"], a: 1 },
+
+        // 17-18: Summation
+        { type: "lesson", title: "Temporal vs Spatial Summation", body: "<b>Temporal:</b> One synapse firing repeatedly. <b>Spatial:</b> Multiple different synapses firing at once." },
+        { type: "quiz", q: "Multiple different neurons firing simultaneously onto one postsynaptic neuron is:", opt: ["Temporal Summation", "Spatial Summation", "Axonal Transport", "Saltatory Conduction"], a: 1 },
+
+        // 19-20: Synapse Types
+        { type: "lesson", title: "Electrical vs Chemical", body: "<b>Electrical:</b> Gap junctions, direct ion flow, very fast. <b>Chemical:</b> Neurotransmitters, slower, but allows complex modulation." },
+        { type: "quiz", q: "What structure allows ions to flow directly between cells in an electrical synapse?", opt: ["Synaptic Cleft", "Gap Junction", "Vesicle", "Receptor"], a: 1 },
+
+        // 21-22: BBB
+        { type: "lesson", title: "Blood-Brain Barrier", body: "Formed by tight junctions in capillaries and <b>Astrocytes</b>. It protects the brain from toxins but blocks many useful medicines." },
+        { type: "quiz", q: "Which glial cell is the main 'helper' in maintaining the blood-brain barrier?", opt: ["Microglia", "Ependymal Cell", "Astrocyte", "Oligodendrocyte"], a: 2 },
+
+        // 23-24: Reflex Arc
+        { type: "lesson", title: "Reflex Arc", body: "Order: Receptor → Sensory (Afferent) Neuron → Integration Center (Spinal Cord) → Motor (Efferent) Neuron → Effector." },
+        { type: "quiz", q: "In a reflex arc, the muscle that actually performs the movement is called the:", opt: ["Receptor", "Integrator", "Effector", "Afferent"], a: 2 },
+
+        // 25-26: FAST Stroke
+        { type: "lesson", title: "Stroke (FAST)", body: "Face drooping, Arm weakness, Speech difficulty, Time to call 911. Ischemic is a clot; Hemorrhagic is a bleed." },
+        { type: "quiz", q: "What does the 'S' in the stroke recognition acronym FAST stand for?", opt: ["Seizure", "Strength", "Speech", "Stability"], a: 2 },
+
+        // 27-28: Seizures
+        { type: "lesson", title: "Seizure Types", body: "<b>Absence:</b> Brief 'staring' spell. <b>Tonic-Clonic:</b> Major convulsions and loss of consciousness." },
+        { type: "quiz", q: "A child who suddenly stops talking and stares blankly for 10 seconds is likely having which seizure?", opt: ["Tonic-Clonic", "Absence", "Ischemic", "Atonic"], a: 1 },
+
+        // 29-30: Retina Signal
+        { type: "lesson", title: "Retina Layers", body: "Light passes through the layers to the back, but the signal flows: <b>Photoreceptor → Bipolar Cell → Ganglion Cell</b>." },
+        { type: "quiz", q: "Which retinal cells have axons that exit the eye to form the Optic Nerve?", opt: ["Rods", "Cones", "Bipolar Cells", "Ganglion Cells"], a: 3 },
+
+        // 31-32: Fovea/Blind Spot
+        { type: "lesson", title: "Special Eye Zones", body: "<b>Fovea:</b> Only cones, high acuity. <b>Optic Disc:</b> No receptors, the 'Blind Spot'." },
+        { type: "quiz", q: "Why is the Optic Disc called the blind spot?", opt: ["Too many rods", "It contains the lens", "It lacks photoreceptors", "It is behind the iris"], a: 2 },
+
+        // 33-34: Humors
+        { type: "lesson", title: "Aqueous vs Vitreous", body: "<b>Aqueous:</b> Front, watery. <b>Vitreous:</b> Back, gel-like, maintains eye shape." },
+        { type: "quiz", q: "Which fluid is gel-like and helps hold the retina against the back of the eye?", opt: ["Aqueous Humor", "Vitreous Humor", "Endolymph", "Perilymph"], a: 1 },
+
+        // 35-36: Accommodation
+        { type: "lesson", title: "Accommodation", body: "The <b>Ciliary Muscles</b> contract to make the lens rounder so you can see objects that are CLOSE to you." },
+        { type: "quiz", q: "To focus on a nearby book, the ciliary muscles contract to make the lens:", opt: ["Flatter", "Rounder/Thicker", "Smaller", "Opaque"], a: 1 },
+
+        // 37-38: Sound Pathway (Middle)
+        { type: "lesson", title: "The Middle Ear", body: "Sound vibrates the Tympanic Membrane → Malleus → Incus → Stapes → Oval Window." },
+        { type: "quiz", q: "Which ossicle is the last in the chain and hits the Oval Window?", opt: ["Malleus", "Incus", "Stapes", "Cochlea"], a: 2 },
+
+        // 39-40: Sound Pathway (Inner)
+        { type: "lesson", title: "The Inner Ear", body: "Oval window vibrates fluid → Basilar membrane moves → <b>Hair cells</b> bend against the Tectorial membrane." },
+        { type: "quiz", q: "Where are the actual auditory receptors (hair cells) located?", opt: ["Semicircular Canals", "Organ of Corti", "Tympanic Membrane", "Auricle"], a: 1 },
+
+        // 41-42: Kinocilium Rule
+        { type: "lesson", title: "Kinocilium Rule", body: "Bending hair cells <b>toward</b> the tallest hair (Kinocilium) = Depolarization. Bending <b>away</b> = Hyperpolarization." },
+        { type: "quiz", q: "Bending the hair cell stereocilia TOWARD the Kinocilium causes:", opt: ["Depolarization", "Hyperpolarization", "Nothing", "Apoptosis"], a: 0 },
+
+        // 43-44: Auditory Brain
+        { type: "lesson", title: "Auditory Brain Pathway", body: "Cochlear Nerve → Inferior Colliculus (Midbrain) → <b>MGN</b> (Thalamus) → Temporal Lobe." },
+        { type: "quiz", q: "Which Thalamic nucleus is the relay station for hearing?", opt: ["LGN", "MGN", "VPL", "Pons"], a: 1 },
+
+        // 45-46: Smell/Thalamus
+        { type: "lesson", title: "Smell (Olfaction)", body: "Olfactory receptors → Bulb → Cortex. <b>Smell is the ONLY sense that skips the Thalamus</b>." },
+        { type: "quiz", q: "Which sense does NOT stop at the Thalamus before reaching the cerebral cortex?", opt: ["Vision", "Hearing", "Smell", "Touch"], a: 2 },
+
+        // 47-48: Trigeminal Spice
+        { type: "lesson", title: "Trigeminal Spice", body: "The 'heat' of a pepper is not a taste; it's a pain/temp signal carried by the <b>Trigeminal Nerve (CN V)</b>." },
+        { type: "quiz", q: "Which cranial nerve carries the burning sensation of wasabi or chili peppers?", opt: ["Facial (VII)", "Glossopharyngeal (IX)", "Trigeminal (V)", "Vagus (X)"], a: 2 },
+
+        // 49-50: RAAS Pathway
+        { type: "lesson", title: "RAAS Pathway", body: "Renin (Kidney) → Angiotensin I → Angiotensin II (via ACE) → <b>Aldosterone</b> (Adrenal Cortex)." },
+        { type: "quiz", q: "What is the end goal of the RAAS pathway?", opt: ["Lower Heart Rate", "Increase Blood Pressure", "Lower Blood Sugar", "Decrease Thirst"], a: 1 },
+
+        // 51-52: GH Disorders
+        { type: "lesson", title: "Growth Hormone", body: "<b>Gigantism:</b> Excess GH in children. <b>Acromegaly:</b> Excess GH in adults (thick bones, large hands/jaw)." },
+        { type: "quiz", q: "A 40-year-old with thickening facial features and widening hands likely has:", opt: ["Gigantism", "Acromegaly", "Diabetes", "Goiter"], a: 1 },
+
+        // 53-54: Leptin/Ghrelin
+        { type: "lesson", title: "Hunger Hormones", body: "<b>Leptin:</b> From fat, says 'Full'. <b>Ghrelin:</b> From stomach, says 'Hungry'." },
+        { type: "quiz", q: "Which hormone is released by the stomach when it is empty to trigger hunger?", opt: ["Leptin", "Ghrelin", "Insulin", "Glucagon"], a: 1 }
+    ];
+
+    function renderRoster() {
+        const roster = document.getElementById('roster');
+        roster.innerHTML = "";
+        students.forEach((s, i) => {
+            const div = document.createElement('div');
+            div.className = `student-item ${s.present ? '' : 'absent'} ${s.name === turnName ? 'active-turn' : ''}`;
+            div.innerHTML = `<span>${s.name}</span> <span>${s.score} pts</span>`;
+            div.onclick = () => { students[i].present = !students[i].present; renderRoster(); };
+            roster.appendChild(div);
+        });
+    }
+
+    function renderSlides() {
+        const container = document.getElementById('slide-container');
+        data.forEach((item, i) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.id = `slide-${i}`;
+            if (item.type === 'lesson') {
+                slide.innerHTML = `
+                    <span class="tag tag-lesson">Lesson ${i+1}</span>
+                    <h1 style="margin:0 0 20px 0">${item.title}</h1>
+                    <p style="font-size:1.4rem; line-height:1.6">${item.body}</p>
+                    <button class="btn" onclick="goNext()">Next: Quiz Time!</button>
+                `;
+            } else {
+                slide.innerHTML = `
+                    <span class="tag tag-quiz">Quiz ${i+1}</span>
+                    <div id="turn-${i}" class="turn-alert"></div>
+                    <h2 style="font-size:1.6rem">${item.q}</h2>
+                    <div class="options-grid">
+                        ${item.opt.map((o, idx) => `<div class="option" onclick="handleChoice(this, ${idx}, ${item.a}, ${i})">${o}</div>`).join('')}
+                    </div>
+                    <button id="btn-${i}" class="btn" style="display:none" onclick="goNext()">Continue</button>
+                `;
+            }
+            container.appendChild(slide);
+        });
+    }
+
+    function showSlide(idx) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById(`slide-${idx}`).classList.add('active');
+        document.getElementById('progress').innerText = `Slide ${idx + 1} / ${data.length}`;
+        
+        if (data[idx].type === 'quiz') {
+            const activeOnes = students.filter(s => s.present);
+            if (activeOnes.length) {
+                turnName = activeOnes[Math.floor(Math.random() * activeOnes.length)].name;
+                document.getElementById(`turn-${idx}`).innerText = `RANDOM TURN: ${turnName.toUpperCase()}`;
+            }
+        } else {
+            turnName = "";
+        }
+        renderRoster();
+    }
+
+    window.handleChoice = (el, chosen, correct, idx) => {
+        const opts = el.parentElement.querySelectorAll('.option');
+        opts.forEach(o => o.style.pointerEvents = 'none');
+        const s = students.find(s => s.name === turnName);
+        if (chosen === correct) {
+            el.classList.add('correct');
+            if(s) s.score += 10;
+        } else {
+            el.classList.add('wrong');
+            opts[correct].classList.add('correct');
+            if(s) s.score -= 5;
+        }
+        document.getElementById(`btn-${idx}`).style.display = 'block';
+        renderRoster();
+    };
+
+    window.goNext = () => {
+        if (currentSlide < data.length - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        } else {
+            alert("End of the Quiz! Great Job!");
+        }
+    };
+
+    renderSlides();
+    showSlide(0);
+</script>
+
+</body>
+</html>
