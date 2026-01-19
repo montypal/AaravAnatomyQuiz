@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anatomy & Physiology Masterclass</title>
+    <title>A&P Mastery: The Missing Chapters</title>
     <style>
         :root {
             --primary: #6366f1;
-            --secondary: #a855f7;
+            --secondary: #f43f5e;
+            --accent: #10b981;
             --bg: #0f172a;
-            --card: rgba(30, 41, 59, 0.7);
+            --card: rgba(30, 41, 59, 0.8);
             --text: #f8fafc;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
             color: var(--text);
             margin: 0;
             display: flex;
@@ -23,240 +24,55 @@
             overflow: hidden;
         }
 
-        /* Sidebar */
+        /* Sidebar Scoreboard */
         #sidebar {
-            width: 280px;
-            background: rgba(15, 23, 42, 0.9);
+            width: 260px;
+            background: rgba(15, 23, 42, 0.95);
             border-right: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
             padding: 20px;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
 
-        .student-tag {
-            background: var(--primary);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin: 2px;
-            display: inline-block;
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .score-item.active-turn {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.2);
+            transform: scale(1.05);
         }
 
-        /* Main Content */
-        #content {
+        /* Content Area */
+        #main {
             flex: 1;
             padding: 40px;
-            overflow-y: auto;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
         }
 
         .slide {
             display: none;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             background: var(--card);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
             padding: 40px;
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
-            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            animation: slideIn 0.4s ease-out;
         }
-
         .slide.active { display: block; }
 
-        h1, h2 { color: var(--secondary); margin-top: 0; }
-        p { line-height: 1.6; color: #cbd5e1; }
-
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s;
-            margin-top: 20px;
-        }
-
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-
-        .option {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .option:hover { background: rgba(255,255,255,0.1); }
-        .correct { background: #22c55e !important; }
-        .wrong { background: #ef4444 !important; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-</head>
-<body>
-
-<div id="sidebar">
-    <h2>Class Roster</h2>
-    <div id="roster"></div>
-    <hr style="width:100%; opacity:0.1; margin: 20px 0;">
-    <div id="progress">Slide 1 of X</div>
-</div>
-
-<div id="content">
-    </div>
-
-<script>
-    // EDIT THIS LIST TO REMOVE STUDENTS
-    const students = ["Aarav", "KangIn", "Alyssa", "Emogen", "Anhad", "Daani", "Maggie"];
-    
-    const quizData = [
-        {
-            type: "lesson",
-            title: "The Auditory Pathway",
-            content: `
-                <p>Sound travels from <b>Mechanical vibration</b> to <b>Electrical signal</b>:</p>
-                <ul>
-                    <li><b>Outer:</b> Pinna → External Canal → Tympanic Membrane.</li>
-                    <li><b>Middle:</b> Ossicles (Malleus → Incus → Stapes) → Oval Window.</li>
-                    <li><b>Inner:</b> Cochlea fluid waves → Basilar Membrane moves → Hair Cells bend (Kinocilium Rule).</li>
-                    <li><b>Brain:</b> Cranial Nerve VIII → Inferior Colliculus (Midbrain) → MGN (Thalamus) → Auditory Cortex.</li>
-                </ul>
-            `
-        },
-        {
-            type: "quiz",
-            question: "Which structure acts as the 'piston' pushing against the Oval Window?",
-            options: ["Malleus", "Incus", "Stapes", "Tympanic Membrane"],
-            correct: 2
-        },
-        {
-            type: "lesson",
-            title: "Vision: Retina & Humors",
-            content: `
-                <p>The retina signals in this order: <b>Photoreceptor → Bipolar Cell → Ganglion Cell</b>.</p>
-                <ul>
-                    <li><b>Fovea:</b> Only cones; highest visual acuity.</li>
-                    <li><b>Optic Disc:</b> The 'Blind Spot' (no receptors).</li>
-                    <li><b>Aqueous Humor:</b> Watery fluid in the anterior segment.</li>
-                    <li><b>Vitreous Humor:</b> Gel-like fluid in the posterior segment.</li>
-                </ul>
-            `
-        },
-        {
-            type: "quiz",
-            question: "In what order does light-induced signaling travel through the retina?",
-            options: [
-                "Ganglion → Bipolar → Photoreceptor",
-                "Photoreceptor → Bipolar → Ganglion",
-                "Bipolar → Photoreceptor → Ganglion",
-                "Photoreceptor → Ganglion → Bipolar"
-            ],
-            correct: 1
-        },
-        {
-            type: "lesson",
-            title: "Endocrine: RAAS & Blood Pressure",
-            content: `
-                <p>The <b>RAAS Pathway</b> regulates long-term blood pressure:</p>
-                <ol>
-                    <li><b>Renin</b> is released by the kidneys.</li>
-                    <li>Renin converts Angiotensinogen to <b>Angiotensin I</b>.</li>
-                    <li>ACE converts it to <b>Angiotensin II</b> (a potent vasoconstrictor).</li>
-                    <li>Angiotensin II triggers <b>Aldosterone</b> release to save salt/water.</li>
-                </ol>
-            `
-        },
-        {
-            type: "quiz",
-            question: "Which hormone in the RAAS pathway directly triggers salt and water retention in the kidneys?",
-            options: ["Renin", "Angiotensin I", "Angiotensin II", "Aldosterone"],
-            correct: 3
-        }
-    ];
-
-    let currentSlide = 0;
-
-    function init() {
-        const rosterDiv = document.getElementById('roster');
-        students.forEach(s => {
-            rosterDiv.innerHTML += `<span class="student-tag">${s}</span>`;
-        });
-        renderSlides();
-        showSlide(0);
-    }
-
-    function renderSlides() {
-        const container = document.getElementById('content');
-        quizData.forEach((data, index) => {
-            const slide = document.createElement('div');
-            slide.className = 'slide';
-            slide.id = `slide-${index}`;
-
-            if (data.type === 'lesson') {
-                slide.innerHTML = `
-                    <h1>Lesson: ${data.title}</h1>
-                    ${data.content}
-                    <button class="btn" onclick="nextSlide()">Got it, let's quiz!</button>
-                `;
-            } else {
-                let optionsHtml = data.options.map((opt, i) => 
-                    `<div class="option" onclick="checkAnswer(this, ${i}, ${data.correct})">${opt}</div>`
-                ).join('');
-                
-                slide.innerHTML = `
-                    <h2>Knowledge Check</h2>
-                    <p>${data.question}</p>
-                    ${optionsHtml}
-                    <button class="btn" style="display:none" id="next-btn-${index}" onclick="nextSlide()">Continue</button>
-                `;
-            }
-            container.appendChild(slide);
-        });
-    }
-
-    function showSlide(index) {
-        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-        document.getElementById(`slide-${index}`).classList.add('active');
-        document.getElementById('progress').innerText = `Slide ${index + 1} of ${quizData.length}`;
-    }
-
-    function nextSlide() {
-        if (currentSlide < quizData.length - 1) {
-            currentSlide++;
-            showSlide(currentSlide);
-        } else {
-            alert("Quiz Complete! Great job, class!");
-        }
-    }
-
-    function checkAnswer(el, chosen, correct) {
-        const parent = el.parentElement;
-        const options = parent.querySelectorAll('.option');
-        
-        options.forEach(opt => opt.style.pointerEvents = 'none');
-
-        if (chosen === correct) {
-            el.classList.add('correct');
-        } else {
-            el.classList.add('wrong');
-            options[correct].classList.add('correct');
-        }
-        
-        const nextBtn = parent.querySelector('button');
-        if (nextBtn) nextBtn.style.display = 'block';
-    }
-
-    init();
-</script>
-
-</body>
-</html>
+        .lesson-header
